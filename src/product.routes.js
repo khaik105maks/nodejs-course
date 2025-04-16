@@ -1,5 +1,6 @@
 const express = require('express');
-const products = require('./products');
+const db = require('../db');
+const { products } = require('../db/schema');
 const { blockSpecialBrand } = require('./middleware');
 
 const router = express.Router();
@@ -24,6 +25,12 @@ router.get('/productswitherror', (request, response) => {
     err.statusCode = 400
     throw err
 });
+
+router.post('/products', async (request, response) => {
+    const { body } = request;
+    await db.insert(products).values(body); 
+    return response.sendStatus(201);
+ });
 
 
 module.exports = router;
